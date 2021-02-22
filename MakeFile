@@ -1,0 +1,25 @@
+help: ## Show this help.
+	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
+
+-setup-dependencies::
+	npm ci
+
+-setup-git-hooks::
+	cp ./hooks/git/pre-commit .git/hooks/pre-commit
+	chmod +rx .git/hooks/pre-commit
+
+install: -setup-dependencies ##  -setup-git-hooks ## Install & launch env
+
+run:  lint
+	npm run android-d
+test:  lint
+	npm test
+
+lint: 
+	npm run lint
+
+fix-code: 
+	npm run fix-code
+
+build: lint
+	npm run android

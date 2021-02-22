@@ -1,4 +1,4 @@
-const Joi = require("joi");
+import Joi from "joi";
 
 const schema = Joi.object({
   firstnameValidator: Joi.string().max(50).required(),
@@ -12,12 +12,20 @@ const schema = Joi.object({
     ),
   passwordValidator: Joi.string()
     .required()
-    .pattern(new RegExp(/^(?=.{6,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/)),
+    .pattern(
+      new RegExp(/^(?=.{6,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/)
+    ),
   password_confirmationValidator: Joi.ref("passwordValidator"),
 }).with("password", "password_confirmation");
 
-module.exports = async (req, res, next) => {
-  const { lastname, firstname, email, password, password_confirmation } = req.body;
+export default async (req: any, res: any, next: any) => {
+  const {
+    lastname,
+    firstname,
+    email,
+    password,
+    password_confirmation,
+  } = req.body;
 
   try {
     await schema.validateAsync({

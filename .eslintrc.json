@@ -1,23 +1,30 @@
 {
-    "env": {
-        "browser": true,
-        "commonjs": true,
-        "es2021": true,
-        "jest/globals": true
-    },
-    "extends": [
-        "airbnb",
-        "prettier"
-    ],
-    "parserOptions": {
-        "ecmaVersion": 12
-    },
-    "plugins": [
-        "jest"
-    ],
-    "ignorePatterns": ["migrations/**"],
-    "rules": {
-        "no-console": "off",
-        "camelcase": "off"
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es2021": true,
+    "jest/globals": true
+    
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".ts"]
+      }
     }
+  },
+
+  "extends": ["airbnb", "prettier"],
+  "parserOptions": {
+    "ecmaVersion": 2020
+  },
+  "parser":"babel-eslint",
+  "plugins": ["jest"],
+  "ignorePatterns": ["migrations/**"],
+  "rules": {
+    "no-console": "off",
+    "camelcase": "off",
+    "import/extensions": "off",
+    "lines-between-class-members" : "off"
+  }
 }
