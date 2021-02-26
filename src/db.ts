@@ -17,6 +17,7 @@ class Database {
   pool: any;
 
   prisma: any;
+  knex: any;
 
   init() {
     this.connectionOptions = {
@@ -30,6 +31,13 @@ class Database {
     };
     this.connection = mysql.createConnection(this.connectionOptions);
     this.pool = mysql.createPool(this.connectionOptions);
+
+    const knex = require("knex")({
+      client: "mysql2",
+      connection: this.connectionOptions,
+    });
+
+    this.knex = knex;
 
     return this;
   }
@@ -52,9 +60,8 @@ class Database {
     return Promise.all([
       this.connection.promise().end(),
       this.pool.promise().end(),
-      this.prisma.$disconnect(),
     ]);
   }
 }
 
-module.exports = new Database().init();
+export default new Database().init();

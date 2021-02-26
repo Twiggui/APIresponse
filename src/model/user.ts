@@ -1,0 +1,34 @@
+export default class User {
+  idUtilisateur: number;
+  passUtilisateur: string;
+  nomUtilisateur: string;
+  prenomUtilisateur: string;
+  profilUtilisateur: number;
+  credentialUtilisateur: string;
+  ddnUtilisateur: Date;
+  sexeUtilisateur: string;
+  clubUtilisateur: string;
+  emailUtilisateur: string;
+  telUtilisateur: string;
+  cpUtilisateur: string;
+  adresseUtilisateur: string;
+  villeUtilisateur: string;
+  paysUtilisateur: string;
+  folocodeUtilisateur: string;
+  tokenStravaUtilisateur: string;
+  tokenGoogleUtilisateur: string;
+  tokenFacebookUtilisateur: string;
+  avatarUtilisateur: string;
+  dateCreationFolocodeUtilisateur: Date;
+  dateValiditeFolocodeUtilisateur: Date;
+  dateCreationUtilisateur: Date;
+  derniereLatitudeUtilisateur: number;
+  derniereLongitudeUtilisateur: number;
+  dateDernierePositionUtilisateur: string;
+  acceptChallengeNameUtilisateur: boolean;
+  organisation: string;
+  acceptChallengeUtilisateur: boolean;
+  acceptChallengeTelUtilisateur: boolean;
+  tokenResetPassword: string;
+  extraInfo: string;
+}
