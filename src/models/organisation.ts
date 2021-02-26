@@ -1,11 +1,12 @@
 
 import db from "../db";
 import moment from "moment";
+import dbc22 from "../dbc22";
 
 export default class OrganisationModel {
 
   static get = async (id: number) => {
-    const rows = await db.query(`SELECT * FROM organisation WHERE id = ?`, [
+    const rows = await db.query(`SELECT * FROM organisation WHERE IDCLient = ?`, [
       id,
     ]);
     if (rows.length > 0) {
@@ -20,7 +21,7 @@ export default class OrganisationModel {
 
    
     const rows = await db.query(`SELECT S.* FROM station S WHERE idStation IN 
-    (SELECT idStation from organisationstation WHERE idOrganisation = ?)`, [
+    (SELECT idStation from organisationstation WHERE IDCLient = ?)`, [
       id,
     ]);
     if (rows.length > 0) {
@@ -33,25 +34,16 @@ export default class OrganisationModel {
     return [];
   };
 
-  //TO DO 
-  static getStationsForUser = async (idUtilisateur: number) => {
-    const rows = await db.query(
-      `SELECT * FROM station WHERE idStation IN (SELECT idStation FROM droit 
-      WHERE idUtilisateur = ? AND idStation IS NOT NULL)`,
-      [idUtilisateur]
-    );
-    if (rows.length > 0) {
-      return rows;
-    }
-    return [];
-  };
 
-static getAdminUsers = async (id: number) => {
+static getOperateurs = async (idClient: number) => {
   try{
-    const rows = await db.query(
-      `SELECT * FROM utilisateur WHERE idUtilisateur IN (SELECT idUtilisateur FROM droit 
-      WHERE idStation IN (Select idStation from organisationstation WHERE idOrganisation = ?) )`,
-      [id]
+    const rows = await dbc22.query(
+      `SELECT * FROM operateur
+       WHERE idOperateur 
+      IN (  SELECT IDOperateur 
+            FROM operateur_client 
+            WHERE IDClient = ? )`,
+      [idClient]
     );
     if (rows.length > 0) {
       return rows;

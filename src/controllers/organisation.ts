@@ -26,8 +26,8 @@ export default class OrganisationController {
 
   static getAdminUsers = async (req: any, res: any) => {
     try {
-      const station = await OrganisationModel.getAdminUsers(req.params.id);
-      return res.status(200).json(station);
+      const operateurs = await OrganisationModel.getOperateurs(req.params.id);
+      return res.status(200).json(operateurs);
     } catch (error) {
       return error;
     }
@@ -35,8 +35,8 @@ export default class OrganisationController {
 
   static getUsers = async (req: any, res: any) => {
     try {
-      const station = await OrganisationModel.getUsers(req.params.id);
-      return res.status(200).json(station);
+      const users = await OrganisationModel.getUsers(req.params.id);
+      return res.status(200).json(users);
     } catch (error) {
       return error;
     }
@@ -83,22 +83,6 @@ export default class OrganisationController {
     }
   };
 
-  static getAll = async (req: any, res: any) => {
-    try {
-      if (RolesService.isSuperAdmin(req.currentUser)) {
-        console.log("isSuperAdmin");
-        const stations = await StationModel.getAll();
-        return res.status(200).json(stations);
-      } else {
-        const stations = await StationModel.getStationsForUser(
-          req.currentUser.idUtilisateur
-        );
-        return res.status(200).json(stations);
-      }
-    } catch (error) {
-      return error;
-    }
-  };
 
   static getLives = async (req: any, res: any) => {
     try {

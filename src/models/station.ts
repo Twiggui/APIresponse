@@ -7,11 +7,10 @@ import FolocodeService from "../services/folocode";
 import moment from "moment";
 
 export default class StationModel {
-  static getStationsForUser = async (idUtilisateur: number) => {
+  static getStationsForOrganisation = async (idOrga: number) => {
     const rows = await db.query(
-      `SELECT * FROM station WHERE idStation IN (SELECT idStation FROM droit 
-      WHERE idUtilisateur = ? AND idStation IS NOT NULL)`,
-      [idUtilisateur]
+      `SELECT * FROM station WHERE idStation IN (SELECT idStation FROM organisation_station WHERE IDClient = ?)`,
+      [idOrga]
     );
     if (rows.length > 0) {
       return rows;

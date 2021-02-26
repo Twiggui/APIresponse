@@ -32,6 +32,6 @@ export default async (req: any, res: any, next: any) => {
 
 	// Finally, return the welcome message to the user, along with their
 	// username given in the token  
-  req.currentUser = payload.data;
+  req.tokenPayload = payload;
   return next();
 }

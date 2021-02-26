@@ -1,4 +1,5 @@
 import md5 from "md5";
+import dbc22 from "../dbc22";
 import User from "../model/user";
 
 const bcrypt = require("bcrypt");
@@ -9,6 +10,7 @@ const saltRounds = 10;
 const db = require("../db");
 
 export default class AuthModel {
+
   findByEmail = async (email: string) => {
     const lowerCaseEmail = email.toLowerCase();
     const rows = await db.query(`SELECT * FROM users WHERE email = ?`, [
@@ -22,8 +24,8 @@ export default class AuthModel {
 
   static findByEmailAndPassword = async (email: string, password: string) => {
     const lowerCaseEmail = email.toLowerCase();
-    const rows = await db.query(
-      `SELECT * FROM utilisateur WHERE emailUtilisateur = ? AND passUtilisateur= ?`,
+    const rows = await dbc22.query(
+      `SELECT * FROM operateur WHERE Email = ? AND Password= ?`,
       [lowerCaseEmail, password]
     );
     if (rows.length > 0) {
@@ -82,7 +84,6 @@ export default class AuthModel {
   static logUserFromDatabase = async (userDatas: any) => {
     const { email, password } = userDatas;
     const lowercaseEmail = email.toLowerCase();
-    console.log(lowercaseEmail, md5(password));
     const user = await AuthModel.findByEmailAndPassword(
       lowercaseEmail,
       md5(password)
@@ -92,4 +93,16 @@ export default class AuthModel {
     }
     throw new Error("user or password incorrect");
   };
+
+  static findClients = async (IDOperateur: any)  => {
+    const rows = await dbc22.query(
+      `SELECT * FROM client WHERE IDClient IN (SELECT IDClient from operateur_client WHERE IDOperateur = ?) `,
+      [IDOperateur]
+    );
+    if (rows.length > 0) {
+      return rows;
+    }
+    return null;
+  }
+
 }

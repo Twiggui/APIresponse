@@ -1,11 +1,11 @@
-import { any } from "joi";
+import ChallengeModel from "../models/challenge";
 import StationModel from "../models/station";
 import RolesService from "../services/roles";
 
 export default class ChallengeController {
   static get = async (req: any, res: any) => {
     try {
-      const station = await C.get(req.params.id);
+      const station = await ChallengeModel.get(req.params.id);
       return res.status(200).json(station);
     } catch (error) {
       return error;
@@ -24,18 +24,17 @@ export default class ChallengeController {
   static addUserToStation = async (req: any, res: any) => {
     try {
       let users = await StationModel.getUsers(req.params.id);
-      console.log(users)
+      console.log(users);
       if (
         users.filter((u: any) => u.idUtilisateur == req.params.idUtilisateur)
           .length == 0
       ) {
-        
         const station = await StationModel.addUserToStation(
           req.params.id,
           req.params.idUtilisateur
         );
         return res.status(200).json(station);
-      }else{
+      } else {
         return res.status(200).json(null);
       }
     } catch (error) {
@@ -45,13 +44,13 @@ export default class ChallengeController {
 
   static getAll = async (req: any, res: any) => {
     try {
-      if (RolesService.isSuperAdmin(req.currentUser)) {
+      if (RolesService.isSuperAdmin(req.tokenPayload.user)) {
         console.log("isSuperAdmin");
         const stations = await StationModel.getAll();
         return res.status(200).json(stations);
       } else {
         const stations = await StationModel.getStationsForUser(
-          req.currentUser.idUtilisateur
+          req.tokenPayload.user.idUtilisateur
         );
         return res.status(200).json(stations);
       }
@@ -59,6 +58,4 @@ export default class ChallengeController {
       return error;
     }
   };
-
-  
 }
