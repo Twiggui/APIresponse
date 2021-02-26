@@ -1,7 +1,8 @@
 import md5 from "md5";
+import User from "../model/user";
 
 const bcrypt = require("bcrypt");
-// const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 
 const saltRounds = 10;
 
@@ -26,7 +27,7 @@ export default class AuthModel {
       [lowerCaseEmail, password]
     );
     if (rows.length > 0) {
-      return rows[0];
+      return rows[0] as User;
     }
     return null;
   };

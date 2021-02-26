@@ -1,5 +1,8 @@
 import authModel from "../models/auth";
 
+const jwt = require("jsonwebtoken");
+const { JWT_PRIVATE_KEY, JWT_EXPIRES_IN } = require("../env");
+
 export default class AuthController {
   static signUp = async (req: any, res: any) => {
     try {
@@ -13,7 +16,7 @@ export default class AuthController {
   static signIn = async (req: any, res: any) => {
     try {
       const login = await authModel.logUserFromDatabase(req.body);
-      if (login.length) {
+      if (login != null) {
         return res.status(200).json(login);
       }
       return res.status(500).json("un problème est survenu");
@@ -27,7 +30,17 @@ export default class AuthController {
     try {
       const login = await authModel.logUserFromDatabase(req.body);
       if (login) {
-        return res.status(200).json(login);
+        const token = jwt.sign(
+          {
+            data: login,
+          },
+          JWT_PRIVATE_KEY,
+          { expiresIn: parseInt(JWT_EXPIRES_IN) }
+        );
+        const data = {
+          token: token
+        };
+        return res.status(200).json(data);
       }
       return res.status(500).json("un problème est survenu");
     } catch (error) {
