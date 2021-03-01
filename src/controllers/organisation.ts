@@ -15,6 +15,17 @@ export default class OrganisationController {
     }
   };
 
+  static getAll = async (req: any, res: any) => {
+    try {
+      const station = await OrganisationModel.getAll();
+      return res.status(200).json(station);
+    } catch (error) {
+      return error;
+    }
+  };
+
+  
+
   static get = async (req: any, res: any) => {
     try {
       const station = await OrganisationModel.get(req.params.id);

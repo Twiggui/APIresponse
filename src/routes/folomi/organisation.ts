@@ -1,7 +1,7 @@
 import { Router } from "express";
-import OrganisationController from "../controllers/organisation";
-import StationController from "../controllers/station";
-import verifyToken from "../middlewares/verifyToken";
+import OrganisationController from "../../controllers/organisation";
+import StationController from "../../controllers/station";
+import verifyToken from "../../middlewares/verifyToken";
 // import CreateNewUserValidator from "../middlewares/createNewUserValidator";
 
 const router = Router();

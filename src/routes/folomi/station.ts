@@ -1,6 +1,6 @@
 import { Router } from "express";
-import StationController from "../controllers/station";
-import verifyToken from "../middlewares/verifyToken";
+import StationController from "../../controllers/station";
+import verifyToken from "../../middlewares/verifyToken";
 // import CreateNewUserValidator from "../middlewares/createNewUserValidator";
 
 const router = Router();

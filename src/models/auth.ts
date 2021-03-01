@@ -86,7 +86,7 @@ export default class AuthModel {
     const lowercaseEmail = email.toLowerCase();
     const user = await AuthModel.findByEmailAndPassword(
       lowercaseEmail,
-      md5(password)
+      password
     );
     if (user) {
       return user;

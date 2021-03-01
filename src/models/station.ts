@@ -28,6 +28,8 @@ export default class StationModel {
     return [];
   };
 
+  
+
   static getUsers = async (id: number) => {
     const rows = await db.query(
       `SELECT * FROM utilisateur WHERE idUtilisateur IN (SELECT idUtilisateur FROM droit 
