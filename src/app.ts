@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // routes
-app.use("/folomi",folomiRouter);
+app.use("/sport",folomiRouter);
 app.use("/auth", authRouter);
 
 app.set("x-powered-by", false);
