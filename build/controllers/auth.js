@@ -35,8 +35,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var authModel = require("../models/auth");
+var auth_1 = __importDefault(require("../models/auth"));
+var jwt = require("jsonwebtoken");
+var _a = require("../env"), JWT_PRIVATE_KEY = _a.JWT_PRIVATE_KEY, JWT_EXPIRES_IN = _a.JWT_EXPIRES_IN;
 var AuthController = /** @class */ (function () {
     function AuthController() {
     }
@@ -46,7 +51,7 @@ var AuthController = /** @class */ (function () {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, authModel.createUserInDatabase(req.body)];
+                    return [4 /*yield*/, auth_1.default.createUserInDatabase(req.body)];
                 case 1:
                     user = _a.sent();
                     return [2 /*return*/, res.status(200).json(user)];
@@ -63,10 +68,10 @@ var AuthController = /** @class */ (function () {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, authModel.logUserFromDatabase(req.body)];
+                    return [4 /*yield*/, auth_1.default.logUserFromDatabase(req.body)];
                 case 1:
                     login = _a.sent();
-                    if (login.length) {
+                    if (login != null) {
                         return [2 /*return*/, res.status(200).json(login)];
                     }
                     return [2 /*return*/, res.status(500).json("un problème est survenu")];
@@ -79,23 +84,36 @@ var AuthController = /** @class */ (function () {
         });
     }); };
     AuthController.login = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-        var login, error_3;
+        var login, clients, token, data, error_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, authModel.logUserFromDatabase(req.body)];
+                    _a.trys.push([0, 4, , 5]);
+                    return [4 /*yield*/, auth_1.default.logUserFromDatabase(req.body)];
                 case 1:
                     login = _a.sent();
-                    if (!!login) {
-                        return [2 /*return*/, res.status(200).json(login)];
-                    }
-                    return [2 /*return*/, res.status(500).json("un problème est survenu")];
+                    if (!login) return [3 /*break*/, 3];
+                    return [4 /*yield*/, auth_1.default.findClients(login.IDOperateur)];
                 case 2:
+                    clients = _a.sent();
+                    token = jwt.sign({
+                        user: login,
+                        applications: [{
+                                name: "folomi",
+                                roles: ["admin"],
+                                organizations: [clients]
+                            }],
+                    }, JWT_PRIVATE_KEY, { expiresIn: parseInt(JWT_EXPIRES_IN) });
+                    data = {
+                        token: token,
+                    };
+                    return [2 /*return*/, res.status(200).json(data)];
+                case 3: return [2 /*return*/, res.status(500).json("un problème est survenu")];
+                case 4:
                     error_3 = _a.sent();
                     console.log("🚀 ~ ", error_3);
                     return [2 /*return*/, res.status(401).send(error_3.message)];
-                case 3: return [2 /*return*/];
+                case 5: return [2 /*return*/];
             }
         });
     }); };
