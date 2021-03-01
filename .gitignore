@@ -1,1 +1,17 @@
 node_modules
+build
+build/**/*
+build/*.js
+build/app.js
+build/app.js.map
+build/db.js
+build/db.js.map
+build/env.js
+build/env.js.map
+build/controllers/auth.js
+build/controllers/auth.js.map
+build/middlewares/createNewUserValidator.js.map
+build/models/auth.js
+build/models/auth.js.map
+build/routes/auth.js
+build/routes/auth.js.map

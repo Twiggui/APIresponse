@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var mysql = require("mysql2");
+var mysql2_1 = __importDefault(require("mysql2"));
 var env_1 = __importDefault(require("./env"));
 var Database = /** @class */ (function () {
     function Database() {
@@ -54,8 +54,13 @@ var Database = /** @class */ (function () {
             multipleStatements: true,
             namedPlaceholders: true,
         };
-        this.connection = mysql.createConnection(this.connectionOptions);
-        this.pool = mysql.createPool(this.connectionOptions);
+        this.connection = mysql2_1.default.createConnection(this.connectionOptions);
+        this.pool = mysql2_1.default.createPool(this.connectionOptions);
+        var knex = require("knex")({
+            client: "mysql2",
+            connection: this.connectionOptions,
+        });
+        this.knex = knex;
         return this;
     };
     Database.prototype.query = function () {
@@ -86,12 +91,11 @@ var Database = /** @class */ (function () {
                 return [2 /*return*/, Promise.all([
                         this.connection.promise().end(),
                         this.pool.promise().end(),
-                        this.prisma.$disconnect(),
                     ])];
             });
         });
     };
     return Database;
 }());
-module.exports = new Database().init();
+exports.default = new Database().init();
 //# sourceMappingURL=db.js.map

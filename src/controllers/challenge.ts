@@ -49,8 +49,8 @@ export default class ChallengeController {
         const stations = await StationModel.getAll();
         return res.status(200).json(stations);
       } else {
-        const stations = await StationModel.getStationsForUser(
-          req.tokenPayload.user.idUtilisateur
+        const stations = await StationModel.getStationsForOrganisation(
+          req.tokenPayload.user.IDClient
         );
         return res.status(200).json(stations);
       }

@@ -39,131 +39,150 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var dbc22_1 = __importDefault(require("../dbc22"));
 var bcrypt = require("bcrypt");
 var jwt = require("jsonwebtoken");
-var md5_1 = __importDefault(require("md5"));
 var saltRounds = 10;
 var db = require("../db");
-var findByEmail = function (email) { return __awaiter(void 0, void 0, void 0, function () {
-    var lowerCaseEmail, rows;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                lowerCaseEmail = email.toLowerCase();
-                return [4 /*yield*/, db.query("SELECT * FROM users WHERE email = ?", [
-                        lowerCaseEmail,
-                    ])];
-            case 1:
-                rows = _a.sent();
-                if (rows.length) {
-                    return [2 /*return*/, rows[0]];
+var AuthModel = /** @class */ (function () {
+    function AuthModel() {
+        var _this = this;
+        this.findByEmail = function (email) { return __awaiter(_this, void 0, void 0, function () {
+            var lowerCaseEmail, rows;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        lowerCaseEmail = email.toLowerCase();
+                        return [4 /*yield*/, db.query("SELECT * FROM users WHERE email = ?", [
+                                lowerCaseEmail,
+                            ])];
+                    case 1:
+                        rows = _a.sent();
+                        if (rows.length) {
+                            return [2 /*return*/, rows[0]];
+                        }
+                        return [2 /*return*/, null];
                 }
-                return [2 /*return*/, null];
-        }
-    });
-}); };
-var findByEmailAndPassword = function (email, password) { return __awaiter(void 0, void 0, void 0, function () {
-    var lowerCaseEmail, rows;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                lowerCaseEmail = email.toLowerCase();
-                return [4 /*yield*/, db.query("SELECT * FROM utilisateur WHERE emailUtilisateur = ? AND passUtilisateur= ?", [lowerCaseEmail, password])];
-            case 1:
-                rows = _a.sent();
-                if (rows.length > 0) {
-                    return [2 /*return*/, rows[0]];
+            });
+        }); };
+        this.verifyPassword = function (password, encrypted_password) { return __awaiter(_this, void 0, void 0, function () {
+            var verifiedPassword;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, bcrypt.compare(password, encrypted_password)];
+                    case 1:
+                        verifiedPassword = _a.sent();
+                        return [2 /*return*/, verifiedPassword];
                 }
-                return [2 /*return*/, null];
-        }
-    });
-}); };
-var hashPassword = function (password) { return __awaiter(void 0, void 0, void 0, function () {
-    var hashedPassword;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, bcrypt.hash(password, saltRounds)];
-            case 1:
-                hashedPassword = _a.sent();
-                return [2 /*return*/, hashedPassword];
-        }
-    });
-}); };
-var verifyPassword = function (password, encrypted_password) { return __awaiter(void 0, void 0, void 0, function () {
-    var verifiedPassword;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, bcrypt.compare(password, encrypted_password)];
-            case 1:
-                verifiedPassword = _a.sent();
-                return [2 /*return*/, verifiedPassword];
-        }
-    });
-}); };
-var emailAlreadyExists = function (email) { return __awaiter(void 0, void 0, void 0, function () {
-    var lowerCaseEmail, rows;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                lowerCaseEmail = email.toLowerCase();
-                return [4 /*yield*/, db.query("SELECT * FROM utilisateur WHERE emailUtilisateur = ?", [
-                        lowerCaseEmail,
-                    ])];
-            case 1:
-                rows = _a.sent();
-                if (rows.length) {
-                    return [2 /*return*/, new Error("Email already exists")];
-                }
-                return [2 /*return*/, false];
-        }
-    });
-}); };
-module.exports.createUserInDatabase = function (userDatas) { return __awaiter(void 0, void 0, void 0, function () {
-    var datasValidation, lastname, firstname, email, password, lowercaseEmail, hashedPassword, res, error_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 5, , 6]);
-                return [4 /*yield*/, emailAlreadyExists(userDatas.email)];
-            case 1:
-                datasValidation = _a.sent();
-                if (!!datasValidation) return [3 /*break*/, 4];
-                lastname = userDatas.lastname, firstname = userDatas.firstname, email = userDatas.email, password = userDatas.password;
-                lowercaseEmail = email.toLowerCase();
-                return [4 /*yield*/, hashPassword(password)];
-            case 2:
-                hashedPassword = _a.sent();
-                return [4 /*yield*/, db.query("INSERT INTO u (lastname, firstname, email, encrypted_password) VALUES (?, ?, ?, ?)", [lastname, firstname, lowercaseEmail, hashedPassword])];
-            case 3:
-                res = _a.sent();
-                if (res) {
-                    return [2 /*return*/, { lastname: lastname, firstname: firstname, lowercaseEmail: lowercaseEmail, id: res.insertId }];
-                }
-                _a.label = 4;
-            case 4: return [3 /*break*/, 6];
-            case 5:
-                error_1 = _a.sent();
-                return [2 /*return*/, error_1];
-            case 6: return [2 /*return*/];
-        }
-    });
-}); };
-module.exports.logUserFromDatabase = function (userDatas) { return __awaiter(void 0, void 0, void 0, function () {
-    var email, password, lowercaseEmail, user;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                email = userDatas.email, password = userDatas.password;
-                lowercaseEmail = email.toLowerCase();
-                console.log(lowercaseEmail, md5_1.default(password));
-                return [4 /*yield*/, findByEmailAndPassword(lowercaseEmail, md5_1.default(password))];
-            case 1:
-                user = _a.sent();
-                if (!!user) {
-                    return [2 /*return*/, user];
-                }
-                throw new Error("user or password incorrect");
-        }
-    });
-}); };
+            });
+        }); };
+    }
+    AuthModel.findByEmailAndPassword = function (email, password) { return __awaiter(void 0, void 0, void 0, function () {
+        var lowerCaseEmail, rows;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    lowerCaseEmail = email.toLowerCase();
+                    return [4 /*yield*/, dbc22_1.default.query("SELECT * FROM operateur WHERE Email = ? AND Password= ?", [lowerCaseEmail, password])];
+                case 1:
+                    rows = _a.sent();
+                    if (rows.length > 0) {
+                        return [2 /*return*/, rows[0]];
+                    }
+                    return [2 /*return*/, null];
+            }
+        });
+    }); };
+    AuthModel.hashPassword = function (password) { return __awaiter(void 0, void 0, void 0, function () {
+        var hashedPassword;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, bcrypt.hash(password, saltRounds)];
+                case 1:
+                    hashedPassword = _a.sent();
+                    return [2 /*return*/, hashedPassword];
+            }
+        });
+    }); };
+    AuthModel.emailAlreadyExists = function (email) { return __awaiter(void 0, void 0, void 0, function () {
+        var lowerCaseEmail, rows;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    lowerCaseEmail = email.toLowerCase();
+                    return [4 /*yield*/, db.query("SELECT * FROM utilisateur WHERE emailUtilisateur = ?", [lowerCaseEmail])];
+                case 1:
+                    rows = _a.sent();
+                    if (rows.length) {
+                        return [2 /*return*/, new Error("Email already exists")];
+                    }
+                    return [2 /*return*/, false];
+            }
+        });
+    }); };
+    AuthModel.createUserInDatabase = function (userDatas) { return __awaiter(void 0, void 0, void 0, function () {
+        var datasValidation, lastname, firstname, email, password, lowercaseEmail, hashedPassword, res, error_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 6, , 7]);
+                    return [4 /*yield*/, AuthModel.emailAlreadyExists(userDatas.email)];
+                case 1:
+                    datasValidation = _a.sent();
+                    if (!datasValidation) return [3 /*break*/, 4];
+                    lastname = userDatas.lastname, firstname = userDatas.firstname, email = userDatas.email, password = userDatas.password;
+                    lowercaseEmail = email.toLowerCase();
+                    return [4 /*yield*/, AuthModel.hashPassword(password)];
+                case 2:
+                    hashedPassword = _a.sent();
+                    return [4 /*yield*/, db.query("INSERT INTO u (lastname, firstname, email, encrypted_password) VALUES (?, ?, ?, ?)", [lastname, firstname, lowercaseEmail, hashedPassword])];
+                case 3:
+                    res = _a.sent();
+                    if (res) {
+                        return [2 /*return*/, { lastname: lastname, firstname: firstname, lowercaseEmail: lowercaseEmail, id: res.insertId }];
+                    }
+                    return [3 /*break*/, 5];
+                case 4: return [2 /*return*/, ""];
+                case 5: return [3 /*break*/, 7];
+                case 6:
+                    error_1 = _a.sent();
+                    return [2 /*return*/, error_1];
+                case 7: return [2 /*return*/, ""];
+            }
+        });
+    }); };
+    AuthModel.logUserFromDatabase = function (userDatas) { return __awaiter(void 0, void 0, void 0, function () {
+        var email, password, lowercaseEmail, user;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    email = userDatas.email, password = userDatas.password;
+                    lowercaseEmail = email.toLowerCase();
+                    return [4 /*yield*/, AuthModel.findByEmailAndPassword(lowercaseEmail, password)];
+                case 1:
+                    user = _a.sent();
+                    if (user) {
+                        return [2 /*return*/, user];
+                    }
+                    throw new Error("user or password incorrect");
+            }
+        });
+    }); };
+    AuthModel.findClients = function (IDOperateur) { return __awaiter(void 0, void 0, void 0, function () {
+        var rows;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, dbc22_1.default.query("SELECT * FROM client WHERE IDClient IN (SELECT IDClient from operateur_client WHERE IDOperateur = ?) ", [IDOperateur])];
+                case 1:
+                    rows = _a.sent();
+                    if (rows.length > 0) {
+                        return [2 /*return*/, rows];
+                    }
+                    return [2 /*return*/, null];
+            }
+        });
+    }); };
+    return AuthModel;
+}());
+exports.default = AuthModel;
 //# sourceMappingURL=auth.js.map
