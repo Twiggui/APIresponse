@@ -1,8 +1,7 @@
 import express from "express";
 import authRouter from "./routes/auth";
-import liveRouter from "./routes/live";
-import stationRouter from "./routes/station";
-import organisationRouter from "./routes/organisation";
+import folomiRouter from "./routes/folomi/index";
+
 
 import { SERVER_PORT } from "./env";
 
@@ -13,13 +12,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // routes
-
+app.use("/folomi",folomiRouter);
 app.use("/auth", authRouter);
-app.use("/live", liveRouter);
-app.use("/station", stationRouter);
-app.use("/organisation", organisationRouter);
-
-
 
 app.set("x-powered-by", false);
 

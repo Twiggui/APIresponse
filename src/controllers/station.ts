@@ -1,4 +1,3 @@
-import { any } from "joi";
 import ChallengeModel from "../models/challenge";
 import StationModel from "../models/station";
 import RolesService from "../services/roles";
@@ -71,7 +70,7 @@ export default class StationController {
         const stations = await StationModel.getAll();
         return res.status(200).json(stations);
       } else {
-        const stations = await StationModel.getStationsForUser(
+        const stations = await StationModel.getStationsForOrganisation(
           req.currentUser.idUtilisateur
         );
         return res.status(200).json(stations);

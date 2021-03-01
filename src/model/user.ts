@@ -31,4 +31,5 @@ export default class User {
   acceptChallengeTelUtilisateur: boolean;
   tokenResetPassword: string;
   extraInfo: string;
+  IDOperateur: any;
 }

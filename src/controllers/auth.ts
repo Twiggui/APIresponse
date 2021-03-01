@@ -30,15 +30,21 @@ export default class AuthController {
     try {
       const login = await authModel.logUserFromDatabase(req.body);
       if (login) {
+        const clients = await authModel.findClients(login.IDOperateur);
         const token = jwt.sign(
           {
-            data: login,
+            user: login,
+            applications: [{
+             name: "folomi",
+             roles :["admin"],
+             organizations : [clients]
+            }],
           },
           JWT_PRIVATE_KEY,
           { expiresIn: parseInt(JWT_EXPIRES_IN) }
         );
         const data = {
-          token: token
+          token: token,
         };
         return res.status(200).json(data);
       }

@@ -6,13 +6,19 @@ import { any } from "joi";
 import FolocodeService from "../services/folocode";
 
 export default class LiveModel {
-  static createLive = async (idUtilisateur : number, live: liveDto) => {
+  static createLive = async (idUtilisateur: number, live: liveDto) => {
     console.log(live);
 
     try {
       const res = await db.query(
         "INSERT INTO live (idUtilisateur, idSport, os, idVersion, codeLive) VALUES (?, ?, ?, ?, ?)",
-        [idUtilisateur, live.idSport, live.os, live.idVersion, FolocodeService.generateNewFolocode(5)]
+        [
+          idUtilisateur,
+          live.idSport,
+          live.os,
+          live.idVersion,
+          FolocodeService.generateNewFolocode(5),
+        ]
       );
       console.log(res);
       return res;
@@ -21,10 +27,10 @@ export default class LiveModel {
     }
     return null;
   };
- 
+
   static getDetailLive = (id: number) => {
-   let result=  db.knex('live').select().limit(10);
-   console.log(result);
+    let result = db.knex("live").select().limit(10);
+    console.log(result);
 
     return db
       .knex("live")
@@ -40,6 +46,16 @@ export default class LiveModel {
 
   static deleteLive = async (idLive: number) => {
     const rows = await db.query(`DELETE FROM live WHERE idLive = ?`, [idLive]);
+    if (rows.length > 0) {
+      return rows;
+    }
+    return null;
+  };
+
+  static getEfforts = async (idLive: any) => {
+    const rows = await db.query(`SELECT * FROM efforts WHERE idLive = ?`, [
+      idLive,
+    ]);
     if (rows.length > 0) {
       return rows;
     }
