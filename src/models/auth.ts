@@ -24,8 +24,9 @@ export default class AuthModel {
 
   static findByEmailAndPassword = async (email: string, password: string) => {
     const lowerCaseEmail = email.toLowerCase();
+    console.log(password);
     const rows = await dbc22.query(
-      `SELECT * FROM operateur WHERE Email = ? AND Password= ?`,
+      `SELECT * FROM operateur WHERE LOWER(Email) = ? AND Password= ?`,
       [lowerCaseEmail, password]
     );
     if (rows.length > 0) {
