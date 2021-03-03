@@ -10,9 +10,11 @@ const YAML = require("yamljs");
 
 const app = express();
 app.set("trust proxy", 1);
+const path = require('path');
 
 // Mise en place de swagger
-const swaggerDocument = YAML.load("./docs/swagger.yaml");
+const swaggerDocument = YAML.load('./src/docs/swagger.yaml');
+
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(cors());
