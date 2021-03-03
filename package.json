@@ -29,7 +29,10 @@
     "knex": "^0.21.18",
     "md5": "^2.3.0",
     "moment": "^2.29.1",
-    "mysql2": "^2.2.5"
+    "mysql2": "^2.2.5",
+    "swagger-jsdoc": "^7.0.0-rc.4",
+    "swagger-ui-express": "^4.1.6",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.10",
