@@ -1,6 +1,7 @@
 {
   "singleQuote": true,
   "semi": true,
-  "endOfLine":"auto" ,
-  "lines-between-class-members" : true
+  "endOfLine": "auto",
+  "lines-between-class-members": true,
+  "printWidth": 250
 }

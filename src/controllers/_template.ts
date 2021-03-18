@@ -12,6 +12,7 @@ export default class ClassController {
         return res.status(200).json(ressource);
         // Si concluant code et ressource à renvoyer
         // CREATE : Code 201 + ressource ajoutée filtrée pour envoi au client (via insertId) + option : lien URL vers cette ressource
+        
         // READ : Code 200 + ressource(s) filtrée(s) pour envoi au client
         // UPDATE : Code 200 + identifiant de la ressource modifiée
         // DELETE : Code 204 + message signifiant le bon déroulement de la suppression
