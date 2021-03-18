@@ -1,63 +1,53 @@
-
-import db from "../db";
 import moment from "moment";
 import dbc22 from "../dbc22";
 
 export default class OrganisationModel {
-
   static get = async (id: number) => {
-    const rows = await db.query(`SELECT * FROM organisation WHERE IDCLient = ?`, [
-      id,
-    ]);
+    const rows = await dbc22.query(`SELECT * FROM organisation WHERE IDCLient = ?`, [id]);
     if (rows.length > 0) {
       return rows;
     }
     return [];
   };
 
-
- static getStations = async (id: number) => {
-   try{
-
-   
-    const rows = await db.query(`SELECT S.* FROM station S WHERE idStation IN 
-    (SELECT idStation from organisationstation WHERE IDCLient = ?)`, [
-      id,
-    ]);
-    if (rows.length > 0) {
-      return rows;
-    }}
-    catch(e)
-    {
+  static getStations = async (id: number) => {
+    try {
+      const rows = await dbc22.query(
+        `SELECT S.* FROM station S WHERE idStation IN 
+    (SELECT idStation from organisationstation WHERE IDCLient = ?)`,
+        [id]
+      );
+      if (rows.length > 0) {
+        return rows;
+      }
+    } catch (e) {
       console.log(e);
     }
     return [];
   };
 
-
-static getOperateurs = async (idClient: number) => {
-  try{
-    const rows = await dbc22.query(
-      `SELECT * FROM operateur
+  static getOperateurs = async (idClient: number) => {
+    try {
+      const rows = await dbc22.query(
+        `SELECT * FROM operateur
        WHERE idOperateur 
       IN (  SELECT IDOperateur 
             FROM operateur_client 
             WHERE IDClient = ? )`,
-      [idClient]
-    );
-    if (rows.length > 0) {
-      return rows;
+        [idClient]
+      );
+      if (rows.length > 0) {
+        return rows;
+      }
+    } catch (e) {
+      console.log(e);
     }
-  }catch(e)
-  {
-    console.log(e)
-  }
 
-  return [];
-};
+    return [];
+  };
 
   static getUsers = async (id: string) => {
-    const rows = await db.query(
+    const rows = await dbc22.query(
       `SELECT * FROM utilisateur WHERE organisation IN (SELECT name from organisation WHERE id = ? ) `,
       [id]
     );
@@ -67,15 +57,12 @@ static getOperateurs = async (idClient: number) => {
     return [];
   };
 
-  static addUser = async (
-    idStation: number,
-    idUtilisateur: number
-  ) => {
+  static addUser = async (idStation: number, idUtilisateur: number) => {
     try {
-      const res = await db.query(
-        "INSERT INTO droit (idUtilisateur, idStation) VALUES (?, ?)",
-        [idUtilisateur, idStation]
-      );
+      const res = await dbc22.query("INSERT INTO droit (idUtilisateur, idStation) VALUES (?, ?)", [
+        idUtilisateur,
+        idStation,
+      ]);
       console.log(res);
       return res;
     } catch (e) {
@@ -85,16 +72,14 @@ static getOperateurs = async (idClient: number) => {
   };
 
   static getAll = async () => {
-    const rows = await db.query(`SELECT * FROM station`);
+    const rows = await dbc22.query(`SELECT * FROM station`);
     if (rows.length > 0) {
       return rows;
     }
     return [];
   };
   static getLivesForStation = async (id: number) => {
-    const rows = await db.query(`SELECT * FROM live WHERE idStationLive = ?`, [
-      id,
-    ]);
+    const rows = await dbc22.query(`SELECT * FROM live WHERE idStationLive = ?`, [id]);
     if (rows.length > 0) {
       return rows;
     }
@@ -102,9 +87,7 @@ static getOperateurs = async (idClient: number) => {
   };
 
   static getPistes = async (id: number) => {
-    const rows = await db.query(`SELECT * FROM piste WHERE idStation = ?`, [
-      id,
-    ]);
+    const rows = await dbc22.query(`SELECT * FROM piste WHERE idStation = ?`, [id]);
     if (rows.length > 0) {
       return rows;
     }
@@ -117,7 +100,7 @@ static getOperateurs = async (idClient: number) => {
 
       console.log(date);
 
-      const rows = await db.query(
+      const rows = await dbc22.query(
         `SELECT
       U.idUtilisateur,
       U.nomUtilisateur,
@@ -138,6 +121,8 @@ static getOperateurs = async (idClient: number) => {
         console.log("la");
       }
       return [];
-    } catch (e) {throw e}
+    } catch (e) {
+      throw e;
+    }
   };
 }

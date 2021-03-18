@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   version: '1.0.0'
   title: 'API Conciergerie générale'
-host: http://localhost:5000
+host: localhost:5000
 basePath: '/'
 consumes:
   - 'application/json'
@@ -136,7 +136,7 @@ paths:
 
   /auth/login:
     post:
-      summary: User authentification
+      summary: User authentification for application use
       tags: 
         - Authentication
       consumes:
@@ -159,7 +159,7 @@ paths:
                 example: Password!12345
       responses:
         200:
-          description: User authentificated
+          description: User authenticated
           schema:
             type: object
             properties:

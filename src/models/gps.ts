@@ -1,8 +1,8 @@
-const db = require("../db");
+import dbc22 from "../dbc22";
 
 export default class GpsModel {
   static addPositions = async (data: any[]) => {
-    // const rows = await db.query(`SELECT * FROM live WHERE idLive = ?`, [id]);
+    // const rows = await dbc22.query(`SELECT * FROM live WHERE idLive = ?`, [id]);
     // if (rows.length) {
     //   return rows[0];
     // }
@@ -10,9 +10,7 @@ export default class GpsModel {
   };
 
   static deleteLive = async (idLive: number) => {
-    const rows = await db.query(`DELETE FROM live WHERE idLive = ?`, [
-      idLive,
-    ]);
+    const rows = await dbc22.query(`DELETE FROM live WHERE idLive = ?`, [idLive]);
     if (rows.length > 0) {
       return rows;
     }
@@ -20,9 +18,7 @@ export default class GpsModel {
   };
 
   static getPositions = async (idLive: number) => {
-    const rows = await db.query(`SELECT * FROM gps WHERE idLive = ?`, [
-      idLive,
-    ]);
+    const rows = await dbc22.query(`SELECT * FROM gps WHERE idLive = ?`, [idLive]);
     if (rows.length > 0) {
       return rows;
     }

@@ -1,7 +1,7 @@
 import liveDto from "../dto/LiveDto";
 
-import db from "../db";
-import Live from "../model/live";
+import dbc22 from "../dbc22";
+import Live from "../interfaces/live";
 import { any } from "joi";
 import FolocodeService from "../services/folocode";
 
@@ -10,15 +10,9 @@ export default class LiveModel {
     console.log(live);
 
     try {
-      const res = await db.query(
+      const res = await dbc22.query(
         "INSERT INTO live (idUtilisateur, idSport, os, idVersion, codeLive) VALUES (?, ?, ?, ?, ?)",
-        [
-          idUtilisateur,
-          live.idSport,
-          live.os,
-          live.idVersion,
-          FolocodeService.generateNewFolocode(5),
-        ]
+        [idUtilisateur, live.idSport, live.os, live.idVersion, FolocodeService.generateNewFolocode(5)]
       );
       console.log(res);
       return res;
@@ -29,10 +23,10 @@ export default class LiveModel {
   };
 
   static getDetailLive = (id: number) => {
-    let result = db.knex("live").select().limit(10);
+    let result = dbc22.knex("live").select().limit(10);
     console.log(result);
 
-    return db
+    return dbc22
       .knex("live")
       .where("idLive", id)
       .then((r: any) => {
@@ -45,7 +39,7 @@ export default class LiveModel {
   };
 
   static deleteLive = async (idLive: number) => {
-    const rows = await db.query(`DELETE FROM live WHERE idLive = ?`, [idLive]);
+    const rows = await dbc22.query(`DELETE FROM live WHERE idLive = ?`, [idLive]);
     if (rows.length > 0) {
       return rows;
     }
@@ -53,9 +47,7 @@ export default class LiveModel {
   };
 
   static getEfforts = async (idLive: any) => {
-    const rows = await db.query(`SELECT * FROM efforts WHERE idLive = ?`, [
-      idLive,
-    ]);
+    const rows = await dbc22.query(`SELECT * FROM efforts WHERE idLive = ?`, [idLive]);
     if (rows.length > 0) {
       return rows;
     }
@@ -64,9 +56,7 @@ export default class LiveModel {
 
   static getLivesForUser = async (idUtilisateur: number) => {
     console.log("iduser : ", idUtilisateur);
-    const rows = await db.query(`SELECT * FROM live WHERE idUtilisateur = ?`, [
-      idUtilisateur,
-    ]);
+    const rows = await dbc22.query(`SELECT * FROM live WHERE idUtilisateur = ?`, [idUtilisateur]);
     if (rows.length > 0) {
       return rows;
     }

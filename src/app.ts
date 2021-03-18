@@ -1,19 +1,17 @@
 import express from "express";
-import authRouter from "./routes/auth";
-import folomiRouter from "./routes/folomi/index";
 
 import { SERVER_PORT } from "./env";
 import cors = require("cors");
-
+import { handleError } from "./helper/error";
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
 
 const app = express();
 app.set("trust proxy", 1);
-const path = require('path');
+const path = require("path");
 
 // Mise en place de swagger
-const swaggerDocument = YAML.load('./src/docs/swagger.yaml');
+const swaggerDocument = YAML.load("./src/docs/swagger.yaml");
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
@@ -42,10 +40,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // routes
-app.use("/sport", folomiRouter);
-app.use("/auth", authRouter);
+require("./routes")(app);
 
 app.set("x-powered-by", false);
+
+app.use((err: any, req: any, res: any, next: any) => {
+  handleError(err, req, res);
+});
 
 const server = app.listen(SERVER_PORT, () => {
   console.log(`Server running on port ${SERVER_PORT}`);

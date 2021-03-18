@@ -1,14 +1,14 @@
 import liveDto from "../dto/LiveDto";
 
-import db from "../db";
-import Live from "../model/live";
+import dbc22 from "../dbc22";
+import Live from "../interfaces/live";
 import { any } from "joi";
 import FolocodeService from "../services/folocode";
 import moment from "moment";
 
 export default class StationModel {
   static getStationsForOrganisation = async (idOrga: number) => {
-    const rows = await db.query(
+    const rows = await dbc22.query(
       `SELECT * FROM station WHERE idStation IN (SELECT idStation FROM organisation_station WHERE IDClient = ?)`,
       [idOrga]
     );
@@ -19,19 +19,15 @@ export default class StationModel {
   };
 
   static get = async (id: number) => {
-    const rows = await db.query(`SELECT * FROM station WHERE idStation = ?`, [
-      id,
-    ]);
+    const rows = await dbc22.query(`SELECT * FROM station WHERE idStation = ?`, [id]);
     if (rows.length > 0) {
       return rows;
     }
     return [];
   };
 
-  
-
   static getUsers = async (id: number) => {
-    const rows = await db.query(
+    const rows = await dbc22.query(
       `SELECT * FROM utilisateur WHERE idUtilisateur IN (SELECT idUtilisateur FROM droit 
       WHERE idStation = ? )`,
       [id]
@@ -42,15 +38,12 @@ export default class StationModel {
     return [];
   };
 
-  static addUserToStation = async (
-    idStation: number,
-    idUtilisateur: number
-  ) => {
+  static addUserToStation = async (idStation: number, idUtilisateur: number) => {
     try {
-      const res = await db.query(
-        "INSERT INTO droit (idUtilisateur, idStation) VALUES (?, ?)",
-        [idUtilisateur, idStation]
-      );
+      const res = await dbc22.query("INSERT INTO droit (idUtilisateur, idStation) VALUES (?, ?)", [
+        idUtilisateur,
+        idStation,
+      ]);
       console.log(res);
       return res;
     } catch (e) {
@@ -60,16 +53,14 @@ export default class StationModel {
   };
 
   static getAll = async () => {
-    const rows = await db.query(`SELECT * FROM station`);
+    const rows = await dbc22.query(`SELECT * FROM station`);
     if (rows.length > 0) {
       return rows;
     }
     return [];
   };
   static getLivesForStation = async (id: number) => {
-    const rows = await db.query(`SELECT * FROM live WHERE idStationLive = ?`, [
-      id,
-    ]);
+    const rows = await dbc22.query(`SELECT * FROM live WHERE idStationLive = ?`, [id]);
     if (rows.length > 0) {
       return rows;
     }
@@ -77,9 +68,7 @@ export default class StationModel {
   };
 
   static getPistes = async (id: number) => {
-    const rows = await db.query(`SELECT * FROM piste WHERE idStation = ?`, [
-      id,
-    ]);
+    const rows = await dbc22.query(`SELECT * FROM piste WHERE idStation = ?`, [id]);
     if (rows.length > 0) {
       return rows;
     }
@@ -92,7 +81,7 @@ export default class StationModel {
 
       console.log(date);
 
-      const rows = await db.query(
+      const rows = await dbc22.query(
         `SELECT
       U.idUtilisateur,
       U.nomUtilisateur,
@@ -113,6 +102,8 @@ export default class StationModel {
         console.log("la");
       }
       return [];
-    } catch (e) {throw e}
+    } catch (e) {
+      throw e;
+    }
   };
 }
